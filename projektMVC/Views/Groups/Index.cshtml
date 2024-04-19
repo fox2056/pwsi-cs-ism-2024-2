@@ -1,0 +1,43 @@
+﻿@model IEnumerable<projektMVC.Models.Group>
+@inject projektMVC.DataContext.CoreStudentsContext _context
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nazwa)
+            </th>
+            <th>Studenci</th>
+            <th>Operacji</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nazwa)
+            </td>
+            <td>
+                    @foreach (var student in _context.Students.Where(s => s.GroupId == item.GrupaId))
+                    {
+                        @await Component.InvokeAsync("StudentListView", new { student = student })
+                    }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GrupaId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GrupaId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GrupaId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
